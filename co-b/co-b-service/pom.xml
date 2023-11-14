@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>co-b-service</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>co-b-service</name>
+    <description>co-b-service</description>
+
+    <parent>
+        <groupId>com.company</groupId>
+        <artifactId>co-b</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <!--raf spring mvc-->
+        <dependency>
+            <groupId>com.github.raf</groupId>
+            <artifactId>raf-framework-springmvc-starter</artifactId>
+            <version>[2.0.0-SNAPSHOT,)</version>
+        </dependency>
+
+        <!--raf nacos config-->
+        <dependency>
+            <groupId>com.github.raf</groupId>
+            <artifactId>raf-framework-nacos-config-starter</artifactId>
+            <version>[2.0.0-SNAPSHOT,)</version>
+        </dependency>
+
+        <!--raf nacos discovery-->
+        <dependency>
+            <groupId>com.github.raf</groupId>
+            <artifactId>raf-framework-nacos-discovery-starter</artifactId>
+            <version>[2.0.0-SNAPSHOT,)</version>
+        </dependency>
+
+        <!--raf dubbo-->
+        <dependency>
+            <groupId>com.github.raf</groupId>
+            <artifactId>raf-framework-dubbo-starter</artifactId>
+            <version>[2.0.0-SNAPSHOT,)</version>
+        </dependency>
+
+        <!--raf mybatis-->
+        <dependency>
+            <groupId>com.github.raf</groupId>
+            <artifactId>raf-framework-mybatis-starter</artifactId>
+            <version>[2.0.0-SNAPSHOT,)</version>
+        </dependency>
+
+        <!--raf redis-->
+        <dependency>
+            <groupId>com.github.raf</groupId>
+            <artifactId>raf-framework-redis-starter</artifactId>
+            <version>[2.0.0-SNAPSHOT,)</version>
+        </dependency>
+
+        <!--raf rabbit mq-->
+        <dependency>
+            <groupId>com.github.raf</groupId>
+            <artifactId>raf-framework-rabbit-starter</artifactId>
+            <version>[2.0.0-SNAPSHOT,)</version>
+        </dependency>
+
+        <!--raf sentry-->
+        <dependency>
+            <groupId>com.github.raf</groupId>
+            <artifactId>raf-framework-sentry-starter</artifactId>
+            <version>[2.0.0-SNAPSHOT,)</version>
+        </dependency>
+
+        <!--raf monitor-->
+        <dependency>
+            <groupId>com.github.raf</groupId>
+            <artifactId>raf-framework-monitor-starter</artifactId>
+            <version>[2.0.0-SNAPSHOT,)</version>
+        </dependency>
+
+        <!--seata-->
+<!--        <dependency>-->
+<!--            <groupId>io.seata</groupId>-->
+<!--            <artifactId>seata-spring-boot-starter</artifactId>-->
+<!--        </dependency>-->
+
+        <!--单元测试-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!--业务依赖-->
+        <dependency>
+            <groupId>com.company</groupId>
+            <artifactId>co-common</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.company</groupId>
+            <artifactId>co-b-facade</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+</project>

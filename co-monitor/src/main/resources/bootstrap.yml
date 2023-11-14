@@ -1,0 +1,63 @@
+nacos:
+  addr: ${NACOS_ADDR:127.0.0.1:8890}
+  namespace: ${NACOS_NAMESPACE:}
+
+server:
+  port: 9000
+
+#http://docs.spring-boot-admin.com/current/server.html
+spring:
+  boot:
+    admin:
+      discovery:
+        ignored-services: 'consumers*,providers*'
+  application:
+    name: co-monitor
+  security:
+    user:
+      name: "admin"
+      password: "admin"
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos.addr}
+        namespace: ${nacos.namespace}
+        group: DEFAULT_GROUP
+        metadata:
+          user.name: "admin"
+          user.password: "admin"
+#  boot:
+#    admin:
+#      notify:
+#        mail:
+#          to:
+#          from:
+#  mail:
+#    default-encoding: UTF-8
+#    host:
+#    username:
+#    password:
+#    properties:
+#      mail:
+#        debug: false
+#        smtp:
+#          port: 465
+#          auth: true
+#          ssl:
+#            enable: true
+#            socket-factory: sf
+
+# 暴露监控端点
+management:
+  server:
+    port: 17000
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+logging:
+  file:
+    name: /data/co-monitor/application.log

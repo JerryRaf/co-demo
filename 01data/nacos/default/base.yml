@@ -1,0 +1,109 @@
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+  jackson:
+    default-property-inclusion: non_null
+    deserialization:
+      fail-on-unknown-properties: false
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 1MB
+  main:
+    allow-bean-definition-overriding: true
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+      - org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration
+  cloud:
+    nacos:
+      discovery:
+        namespace: ${nacos.namespace}
+        server-addr: ${nacos.addr}
+
+info:
+  name: ${spring.application.name}
+
+#日志配置
+logging:
+  level:
+    root: info
+    com.company.a.dao.cms: debug
+    jdbc:
+      sqlonly: OFF
+      sqltiming: INFO
+      audit: OFF
+      resultset: OFF
+      resultsettable: OFF
+      connection: OFF
+  file:
+    path: /data/logs
+
+#日志记录配置（输入，输出）
+#BASIC,REQ_HEADERS, REQ_BODY, RSP_HEADERS（默认）, RSP_BODY
+raf.log:
+  enabled: true
+  level: REQ_BODY
+
+raf.sentry:
+  enabled: false
+
+#actuator监控配置
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: '*' #health,info,env,refresh
+  endpoint:
+    health:
+      probes: 
+        enabled: true
+      show-details: ALWAYS
+    logfile:
+      external-file: /data/logs/${spring.application.name}/application.log
+  health:
+    defaults: 
+      enabled: true
+    #ping: 
+      #enabled: true
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+    dubbo:
+      status:
+        defaults: registry,memory,load
+        extras: 
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+
+
+#中间件环境变量配置
+jasypt:
+  encryptor:
+    #解决启动log找不到服务名问题
+    bootstrap: false
+    password: aa4$%345234
+redis:
+  #单节点
+  # host: 
+  # port: 
+  # password: 
+  #多节点
+  nodes: 127.0.0.1:7001
+  password: 
+db:
+  addr: 127.0.0.1:3306
+  username: ENC(7jPfoKumSQ3+Hjz6zmk8l/oSJdtNpRHwqOb6BIwK1+6v4w46b4C0BqzU2xL76rli)
+  password: ENC(7jPfoKumSQ3+Hjz6zmk8l/oSJdtNpRHwqOb6BIwK1+6v4w46b4C0BqzU2xL76rli)
+mq:
+  addr: 127.0.0.1:5672
+  username: guest
+  password: guest

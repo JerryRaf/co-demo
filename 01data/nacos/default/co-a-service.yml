@@ -1,0 +1,234 @@
+server:
+  port: 8081
+  shutdown: graceful
+  tomcat:
+    threads:
+      min-spare: 100
+      max: 1000
+    max-connections: 10000
+    accept-count: 1000
+
+management:
+  server:
+    port: 18081
+
+spring:
+  main:
+    allow-circular-references: true
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+
+#dubbo配置
+dubbo:
+ application:
+   name: ${spring.application.name}
+   qos-enable: false
+   register-mode: service  #all，instance，service
+   metadata-type: remote
+   serialize-check-status: DISABLE
+   check-serializable: false
+ registry:
+   address: nacos://${nacos.addr}?namespace=${nacos.namespace} #nacos://${nacos.addr}?registry-type=service
+   protocol: grpc
+   timeout: 2000
+   register-mode: FORCE_INTERFACE #APPLICATION_FIRST，FORCE_APPLICATION，FORCE_INTERFACE
+   file: ../registry/${dubbo.application.name}
+  #  parameters:
+  #    namespace: ${nacos.namespace}
+  #    register-consumer-url: false
+   use-as-metadata-center: true
+   use-as-config-center: false
+ protocol:
+   name: grpc
+   port: 28001
+   corethreads: 200 #核心线程数
+   serialization: hessian2
+ provider:
+   actives: 0 #consumer，每方法最大并发调用数
+   connections: 10 #consumer，最大并发调用数
+   accepts: 0 #最大可以接受的连接数
+   threadpool: cached
+   threads: 300 #最大线程数（队列为0是阻塞对列，该值没用）
+   alive: 5000 #非核心线程存活时间
+   queues: 0 #阻塞对列
+   timeout: 60000
+   executes: 0 #提供者,每方法最大并发调用数
+   retries: 0
+   filter: -exception
+ consumer:
+   check: false
+   retries: 0
+
+#mybatis配置
+raf.dataSource:
+  oms:
+    url: jdbc:mariadb://${db.addr}/co_oms_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&useSSL=false&allowMultiQueries=true&tinyInt1isBit=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${db.username}
+    password: ${db.password}
+    mapperLocations: mapper/oms/*.xml
+    basePackage: com.company.a.dao.oms
+    typeAliasesPackage: com.company.a.entity
+    driver-class-name: org.mariadb.jdbc.Driver
+    configLocation: classpath:mapper/mybatis-config.xml
+    pool:
+      maximumPoolSize: 10 #cpu数*2+磁盘数
+      idleTimeout: 600000 #默认10分钟
+      connectionTimeout: 15000 #15s比数据库大，数据库10s
+      maxLifetime: 1740000 #29分钟比数据库小，数据库30
+  cms:
+    url: jdbc:mariadb://${db.addr}/co_cms_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&failOverReadOnly=false&useSSL=false&allowMultiQueries=true&tinyInt1isBit=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${db.username}
+    password: ${db.password}
+    mapperLocations: mapper/cms/*.xml
+    basePackage: com.company.a.dao.cms
+    typeAliasesPackage: com.company.a.entity
+    driver-class-name: org.mariadb.jdbc.Driver
+    configLocation: classpath:mapper/mybatis-config.xml
+    pool:
+      maximumPoolSize: 10 #cpu数*2+磁盘数
+      idleTimeout: 600000 #默认10分钟
+      connectionTimeout: 15000 #15s比数据库大，数据库10s
+      maxLifetime: 1740000 #29分钟比数据库小，数据库30
+
+#redis配置
+spring.redis:
+  database: 0
+  # host: ${redis.host}
+  # port: ${redis.port}
+  cluster:
+    nodes: ${redis.nodes}
+  password: ${redis.password}
+  timeout: 2s
+  lettuce:
+    pool:
+      max-active: 100 #连接池中的最大活跃连接数
+      max-idle: 10 #连接池中的最大空闲连接数
+      min-idle: 5 #连接池中的最小空闲连接数
+      max-wait: 2s #连接池最大阻塞等待时间
+  
+#redisson配置
+raf.redisson:
+  enabled: true
+  threads: 10
+  nettyThreads: 10
+  # single:
+  #   host: ${redis.host}
+  #   port: ${redis.port}
+  #   password: ${redis.password}
+  #   database: 0
+  #   retryAttempts: 3
+  #   retryInterval: 1500
+  #   idleConnectionTimeout: 2000
+  #   subscriptionsPerConnection: 5
+  #   connectTimeout: 5000
+  #   timeout: 2000
+  cluster:
+    nodes: ${redis.nodes}
+    password: ${redis.password}
+
+#seata配置
+seata:
+  enabled: true
+  enableAutoDataSourceProxy: true
+  application-id: ${spring.application.name}
+  tx-service-group: my_test_tx_group
+  config:
+    type: file
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: ${nacos.addr}
+      group : seata
+      namespace: ${nacos.namespace}
+  service:
+    disableGlobalTransaction: false
+    vgroup-mapping.my_test_tx_group: default
+  client:
+    support:
+      spring:
+        datasource-autoproxy: true
+
+#异步线程池配置
+raf.executor:
+  enabled: true
+  corePoolSize: 10
+  maxPoolSize: 20
+  queueCapacity: 100
+  keepAliveSeconds: 5
+  threadNamePrefix: raf-async-thread-pool-
+  metricEnabled: false
+
+#雪花算法
+raf.snow-flake:
+  enabled: false
+
+#rabbitMq配置
+raf.rabbit:
+  enabled: true
+  addresses: ${mq.addr}
+  username: ${mq.username}
+  password: ${mq.password}
+  consumer: #消费者配置
+    group: ${spring.application.name} #消费者组,默认写spring.application.name即可
+  provider: #生产者配置
+    exchange: xx.demo.topic #topicExchange交换机名称
+    ack: true #是否监听发送返回 confirm，return
+  delay: #延迟队列，同一个业务延迟时间间隔必须一样
+    deadExchange: xx.demo.dead.topic #死信队列
+    receiveExchange: xx.demo.receive.topic #接收队列
+    queuePrefix:
+      - xx.demo.delay.businessOne #业务1 接收队列xx.demo.delay.businessOne.receive.queue
+      - xx.demo.delay.businessTwo #业务2 接收队列xx.demo.delay.businessTwo.receive.queue
+
+#okhttp配置
+raf.okhttp:
+  enabled: true
+  connectTimeout: 2000
+  readTimeout: 5000
+  writeTimeout: 5000
+  retryOnConnectionFailure: true
+  followRedirects: true
+  followSslRedirects: true
+  connection:
+    maxIdleConnections: 10
+    keepAliveDuration: 30000
+  level: BODY #日志级别 NONE BASIC HEADERS BODY
+
+#swagger配置
+swagger:
+  enabled: true
+  contact:
+    name: Jerry
+    email: xx@xx.com
+  authorization:
+    name: Authorization
+    type: ApiKey
+    key-name: Authorization
+    auth-regex: ^.*$
+  globalOperationParameters: #以下参数只限原子服务使用
+  - name: x-user-id
+    modelRef: string
+    parameterType: header
+    required: false
+    description:
+  - name: x-user-name-header
+    modelRef: string
+    parameterType: header
+    required: false
+    description:
+  - name: x-role-header
+    modelRef: string
+    parameterType: header
+    required: false
+    description:
+  docket:
+    all:
+      version: v-all
+      title: demo
+      description: demo
+      base-package: com.company.a.controller
+      base-path: /**

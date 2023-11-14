@@ -1,0 +1,25 @@
+#nacos configures environment variables
+nacos:
+  addr: ${NACOS_ADDR:127.0.0.1:8890}
+  namespace: ${NACOS_NAMESPACE:}
+
+spring:
+  application:
+    name: co-a-service
+  cloud:
+    nacos:
+      config:
+        enabled: true
+        fileExtension: yml
+        serverAddr: ${nacos.addr}
+        namespace: ${nacos.namespace}
+        prefix: ${spring.application.name}
+        group: default
+        sharedConfigs:
+          - dataId: base.yml
+            group: default
+            refresh: true
+        extensionConfigs:
+          - dataId: ${spring.application.name}-ext.yml
+            group: default
+            refresh: true
